@@ -1,58 +1,112 @@
 # Uses https://simplemaps.com/data/us-cities
-import pandas
+# import pandas
 import requests
 import json
 from pathlib import Path
 
-# from pprint import pprint
 
-COST_OF_LIVING_DATA = "cost_of_living_response.json"
+BEA_URL = "https://apps.bea.gov/api/data"
+BEA_KEY = "8A864957-E515-4F60-9F2B-36245BDCC041"
+BEA_PARAMS = {
+    "UserID": BEA_KEY,
+    "method": "GetData",
+    "datasetname": "Regional",
+    "TableName": None,
+    "ResultFormat": "json",
+}
 
-cities_df = pandas.read_csv("uscities.csv")
-cities_df = cities_df[cities_df["source"] == "shape"]
 
-
-def fetch_cost_of_living_data():
-    print("FETCHING COST OF LIVING DATA")
-    cost_of_living_url = (
-        "https://cities-cost-of-living1.p.rapidapi.com/get_cities_details_by_name"
-    )
-    cost_of_living_headers = {
-        "content-type": "application/x-www-form-urlencoded",
-        "X-RapidAPI-Host": "cities-cost-of-living1.p.rapidapi.com",
-        "X-RapidAPI-Key": "7bf9de1527mshf1894980597fa11p1655d9jsn53c1b65edec4",
+def get_line_codes_for_table(table_name):
+    params = {
+        "UserID": BEA_KEY,
+        "method": "GetParameterValuesFiltered",
+        "datasetname": "Regional",
+        "TableName": table_name,
+        "TargetParameter": "LineCode",
+        "ResultFormat": "json",
     }
-    cost_of_living_payload = {
-        "cities": [
-            {"name": city["city_ascii"], "country": "United States"}
-            for index, city in cities_df.head(3).iterrows()
-        ]
-    }
-    cost_of_living_response = requests.request(
-        "POST",
-        cost_of_living_url,
-        data=cost_of_living_payload,
-        headers=cost_of_living_headers,
-    )
-    json.dump(cost_of_living_response.json(), open(COST_OF_LIVING_DATA, "w"), indent=4)
+    print(requests.get(BEA_URL, params=params).json())
 
 
-if not Path(COST_OF_LIVING_DATA).exists():
-    fetch_cost_of_living_data()
+# get_line_codes_for_table("CAINC30")
 
-for index, city in cities_df.head(3).iterrows():
 
-    print(
-        city["city_ascii"],
-        f'({city["lat"]}, {city["lng"]})',
-        city["state_id"],
-        # city["county_fips"],
-        city["county_name"],
-        city["population"],
-        city["density"],
-        bool(city["military"]),
-        bool(city["incorporated"]),
-        city["timezone"],
-        city["ranking"],
-        # city["zips"],
-    )
+def fetch_bea_data(table_name, line_code, datasheet):
+    BEA_PARAMS["Year"] = "2020"
+    BEA_PARAMS["GeoFIPS"] = "COUNTY"
+    BEA_PARAMS["LineCode"] = line_code
+    BEA_PARAMS["TableName"] = table_name
+
+    bea_response = requests.get(BEA_URL, params=BEA_PARAMS)
+    if bea_response.status_code == 200:
+        json.dump(bea_response.json(), open(datasheet, "w"))
+    else:
+        print(bea_response.text)
+
+
+PER_CAPITA_PERSONAL_INCOME = {
+    "datasheet": "data/per_capita_personal_income.json",
+    "table_name": "CAINC1",
+    "line_code": 3,
+}
+
+TOTAL_EMPLOYMENT = {
+    "datasheet": "data/total_employment.json",
+    "table_name": "CAEMP25N",
+    "line_code": 10,
+}
+
+AVERAGE_WAGES_AND_SALARIES = {
+    "datasheet": "data/avg_wage_salaries.json",
+    "table_name": "CAINC30",
+    "line_code": 300,
+}
+
+PER_CAPITA_NET_EARNINGS = {
+    "datasheet": "data/per_capita_net_earnings.json",
+    "table_name": "CAINC30",
+    "line_code": 120,
+}
+
+PER_CAPITA_DIVIDENDS_INTEREST_RENT = {
+    "datasheet": "data/per_capita_dividends_interest_rent.json",
+    "table_name": "CAINC30",
+    "line_code": 170,
+}
+
+refresh_stats = [
+    # PER_CAPITA_PERSONAL_INCOME,
+    # TOTAL_EMPLOYMENT,
+    AVERAGE_WAGES_AND_SALARIES,
+    PER_CAPITA_NET_EARNINGS,
+    PER_CAPITA_DIVIDENDS_INTEREST_RENT,
+]
+
+for stat in refresh_stats:
+    print(stat["datasheet"])
+    if not Path(stat["datasheet"]).exists():
+        fetch_bea_data(
+            stat["table_name"],
+            stat["line_code"],
+            stat["datasheet"],
+        )
+
+
+# cities_df = pandas.read_csv("data/uscities.csv")
+# cities_df = cities_df[cities_df["source"] == "shape"]
+# for index, city in cities_df.head(3).iterrows():
+#     pass
+# print(
+#     city["city_ascii"],
+#     f'({city["lat"]}, {city["lng"]})',
+#     city["state_id"],
+#     # city["county_fips"],
+#     city["county_name"],
+#     city["population"],
+#     city["density"],
+#     bool(city["military"]),
+#     bool(city["incorporated"]),
+#     city["timezone"],
+#     city["ranking"],
+#     # city["zips"],
+# )
