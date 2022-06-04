@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.gis",
     "drf_yasg",
     "cities",
 ]
@@ -56,9 +57,9 @@ WSGI_APPLICATION = "cities.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": os.path.join(BASE_DIR, "db.postgres"),
-        "USER": "django",
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        "NAME": "postgres",
+        "USER": "postgres",
         "PASSWORD": "postgres",
         "HOST": "postgres",
         "PORT": "5432",

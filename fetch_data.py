@@ -28,9 +28,6 @@ def get_line_codes_for_table(table_name):
     print(requests.get(BEA_URL, params=params).json())
 
 
-# get_line_codes_for_table("CAINC30")
-
-
 def fetch_bea_data(table_name, line_code, datasheet):
     BEA_PARAMS["Year"] = "2020"
     BEA_PARAMS["GeoFIPS"] = "COUNTY"
@@ -74,39 +71,21 @@ PER_CAPITA_DIVIDENDS_INTEREST_RENT = {
     "line_code": 170,
 }
 
-refresh_stats = [
-    # PER_CAPITA_PERSONAL_INCOME,
-    # TOTAL_EMPLOYMENT,
+stats = [
+    PER_CAPITA_PERSONAL_INCOME,
+    TOTAL_EMPLOYMENT,
     AVERAGE_WAGES_AND_SALARIES,
     PER_CAPITA_NET_EARNINGS,
     PER_CAPITA_DIVIDENDS_INTEREST_RENT,
 ]
 
-for stat in refresh_stats:
-    print(stat["datasheet"])
-    if not Path(stat["datasheet"]).exists():
-        fetch_bea_data(
-            stat["table_name"],
-            stat["line_code"],
-            stat["datasheet"],
-        )
+if __name__ == "__main__":
 
-
-# cities_df = pandas.read_csv("data/uscities.csv")
-# cities_df = cities_df[cities_df["source"] == "shape"]
-# for index, city in cities_df.head(3).iterrows():
-#     pass
-# print(
-#     city["city_ascii"],
-#     f'({city["lat"]}, {city["lng"]})',
-#     city["state_id"],
-#     # city["county_fips"],
-#     city["county_name"],
-#     city["population"],
-#     city["density"],
-#     bool(city["military"]),
-#     bool(city["incorporated"]),
-#     city["timezone"],
-#     city["ranking"],
-#     # city["zips"],
-# )
+    for stat in stats:
+        print(stat["datasheet"])
+        if not Path(stat["datasheet"]).exists():
+            fetch_bea_data(
+                stat["table_name"],
+                stat["line_code"],
+                stat["datasheet"],
+            )

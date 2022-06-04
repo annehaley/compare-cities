@@ -17,7 +17,22 @@ class City(models.Model):
     incorporated = models.BooleanField()
     timezone = models.CharField(max_length=255)
     ranking = models.IntegerField()
-    zips = models.CharField(max_length=255)
+    zips = models.CharField(max_length=2000)
+    average_wages_and_salaries = models.IntegerField(
+        help_text="Average wages and salaries in dollars"
+    )
+    per_capita_dividends_interest_and_rent = models.IntegerField(
+        help_text="Per capita dividends, interest, and rent in dollars"
+    )
+    per_capita_net_earnings = models.IntegerField(
+        help_text="Per capita net earnings in dollars"
+    )
+    per_capita_personal_income = models.IntegerField(
+        help_text="Per capita personal income in dollars"
+    )
+    total_employment = models.IntegerField(
+        help_text="Total Full-Time and Part-Time Employment by NAICS Industry in number of jobs"
+    )
 
 
 admin.site.register(City)
