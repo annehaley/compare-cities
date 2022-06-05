@@ -3,7 +3,6 @@ import pandas
 from fetch_data import stats
 from django.core.management.base import BaseCommand
 from cities.models import City
-from django.contrib.gis.geos import Point
 
 
 class Command(BaseCommand):
@@ -34,7 +33,8 @@ class Command(BaseCommand):
             print("Saving", city["city_ascii"])
             City.objects.create(
                 name=city["city_ascii"],
-                location=Point(city["lat"], city["lng"]),
+                latitude=city["lat"],
+                longitude=city["lng"],
                 state_id=city["state_id"],
                 county_fips=city["county_fips"],
                 county_name=city["county_name"],

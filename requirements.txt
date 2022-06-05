@@ -2,3 +2,4 @@ django>=3.2,<4.0
 drf-yasg
 psycopg2
 pandas
+django-cors-headers

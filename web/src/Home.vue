@@ -1,52 +1,42 @@
 <script lang="ts">
 import {
-  defineComponent,
+  defineComponent, ref, computed
 } from '@vue/composition-api';
-
-// Initialize and add the map
-function initMap(): void {
-  // The location of Uluru
-  const uluru = { lat: -25.344, lng: 131.031 };
-  // The map, centered at Uluru
-  const map = new google.maps.Map(
-    document.getElementById("map") as HTMLElement,
-    {
-      zoom: 4,
-      center: { lat: 37.09, lng: -95.713 },
-    }
-  );
-
-  // The marker, positioned at Uluru
-  const marker = new google.maps.Marker({
-    position: uluru,
-    map: map,
-  });
-}
-
-declare global {
-  interface Window {
-    initMap: () => void;
-  }
-}
-window.initMap = initMap;
+import { cities } from './store';
+import { City, Marker } from './types';
 
 export default defineComponent({
   setup() {
-    return {}
+    const center = ref({ lat: 37.09, lng: -95.713 });
+    const markerLocations = computed(
+      (): Marker[] =>cities.value.map(
+        (city: City) => (
+          {
+            position: {lat: city.latitude, lng: city.longitude},
+            id: city.id,
+          }
+        )
+      )
+    )
+    return {
+      center,
+      markerLocations,
+    }
   }
 });
 </script>
 
 <template>
-  <div id="map" class="map"></div>
+  <GmapMap
+    :center='center'
+    :zoom='5'
+    style='width:100%;  height: 100%;'
+  >
+    <GmapMarker
+      v-for="marker in markerLocations"
+      :key="marker.id"
+      :position="marker.position"
+      @click="center=marker.position"
+    />
+  </GmapMap>
 </template>
-
-<style scoped>
-.map {
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
-}
-</style>

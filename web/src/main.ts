@@ -1,19 +1,20 @@
-import axios from 'axios';
 import Vue from 'vue';
+import '../plugins/composition';
 import App from './App.vue';
 import vuetify from '../plugins/vuetify';
 import router from './router';
-import { axiosInstance } from './store';
+import * as VueGoogleMaps from 'vue2-google-maps'
 
-const axiosIns = axios.create({
-  baseURL: 'http://localhost:8000',
+Vue.use(VueGoogleMaps, {
+  load: {
+    // demo key from Google documentation
+    key: 'AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg',
+    libraries: 'places',
+  }
 });
-axiosInstance.value = axiosIns;
+
 
 new Vue({
-  provide: {
-    axios: axiosInstance,
-  },
   router,
   vuetify,
   render: (h) => h(App),
