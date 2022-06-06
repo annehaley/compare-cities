@@ -21,7 +21,7 @@ export default defineComponent({
         absolute
         permanent
     >
-        <v-card height="100%">
+        <v-card color="transparent">
             <v-card-title>Results ({{ cities.length }})</v-card-title>
             <v-container>
                 <v-row

@@ -2,7 +2,7 @@
 import { defineComponent, ref } from '@vue/composition-api';
 import FilterSidebar from './components/FilterSidebar.vue';
 import ResultsSidebar from './components/ResultsSidebar.vue';
-import { searchedStates, fetchCities, cities } from './store';
+import { searchedStates, fetchCities, cities, allCities } from './store';
 import { State } from './types';
 
 
@@ -32,6 +32,7 @@ export default defineComponent({
 
     return {
       cities,
+      allCities,
       stateOptions,
       selectedStates,
       searchedStates,
@@ -88,9 +89,9 @@ export default defineComponent({
     </v-overlay>
 
     <v-main>
-      <filter-sidebar v-if="cities.length"/>
+      <filter-sidebar v-if="allCities.length"/>
       <router-view />
-      <results-sidebar v-if="cities.length"/>
+      <results-sidebar v-if="allCities.length"/>
     </v-main>
   </v-app>
 </template>

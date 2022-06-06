@@ -9,6 +9,8 @@ export const axiosInstance = ref(axios.create({
 
 export const searchedStates = ref<State[]>([]);
 
+export const allCities = ref<City[]>([]);
+
 export const cities = ref<City[]>([]);
 
 export const highlightedCity = ref<City>()
@@ -44,6 +46,6 @@ export async function fetchCities(){
         }
         cities.value = cities.value.concat(response.data.results)
     }
-    console.log(cities.value)
+    allCities.value = cities.value
     return cities.value.length
 }

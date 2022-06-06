@@ -1,7 +1,7 @@
 // JavaScript program to calculate Distance Between
 // Two Points on Earth
 
-export function distance(lat1: number, lat2: number, lon1: number, lon2: number){
+export default function distance(lat1: number, lat2: number, lon1: number, lon2: number){
     lon1 =  lon1 * Math.PI / 180;
     lon2 = lon2 * Math.PI / 180;
     lat1 = lat1 * Math.PI / 180;

@@ -4,6 +4,7 @@ import {
 } from '@vue/composition-api';
 import { cities, highlightedCity, center, infoOpen, highlightCity, pointSelectionMode, pointSelection } from '../store';
 import { City, Marker } from '../types';
+import getProperty from '@/utils/property';
 
 export default defineComponent({
   setup() {
@@ -12,8 +13,8 @@ export default defineComponent({
       'density',
       'total_employment',
       'average_wages_and_salaries',
-      'per_capita_dividends_interest_and_rent',
       'per_capita_personal_income',
+      'per_capita_dividends_interest_and_rent',
       'per_capita_net_earnings',
       'incorporated',
       'military',
@@ -28,11 +29,7 @@ export default defineComponent({
         )
       )
     )
-    function getProperty<T, K extends keyof T>(o: T, propertyName: K) {
-      const value: any = o[propertyName];
-      if (parseFloat(value)) return parseFloat(value)> 0 ? value : 'N/A'
-      return value
-    }
+
     function selectPoint(event: any) {
       if(pointSelectionMode) pointSelection.value = {
         lat: event.latLng.lat(),
@@ -59,7 +56,6 @@ export default defineComponent({
   <GmapMap
     :center='center'
     :zoom='5'
-    :style="pointSelectionMode ?{cursor: 'crosshair'} :{}"
     style='width:100%;  height: 100%;'
     @click="selectPoint"
   >
