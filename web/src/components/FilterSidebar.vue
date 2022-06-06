@@ -36,6 +36,7 @@ export default defineComponent({
         )})
         const selectedRanges = ref(Object.assign({}, maximumRanges.value))
         const milesFrom = ref<number>(10)
+        const includeMissingValues = ref<Boolean>(true)
         const includeMilitary = ref<Boolean>(true)
         const includeUnincorporated = ref<Boolean>(true)
 
@@ -60,7 +61,7 @@ export default defineComponent({
                     cities.value = cities.value.filter(
                         (city: City) => {
                             const value = getProperty(city, attribute as keyof City)
-                            if(value === 'N/A') return true
+                            if(value === 'N/A' || value < 0) return includeMissingValues.value
                             return value <= range[1] && value >= range [0]
                         }
                     )
@@ -87,6 +88,7 @@ export default defineComponent({
             maximumRanges,
             includeMilitary,
             includeUnincorporated,
+            includeMissingValues,
             sliderStep,
             filter,
         }
@@ -155,14 +157,20 @@ export default defineComponent({
                 />
             </v-expansion-panel-content>
         </v-expansion-panel>
+
         <v-checkbox
             v-model="includeMilitary"
-            label="Include Military Cities"
+            label="Include Military"
         />
         <v-checkbox
             v-model="includeUnincorporated"
-            label="Include Unincorporated Cities"
+            label="Include Unincorporated"
         />
+        <v-checkbox
+            v-model="includeMissingValues"
+            label="Ignore missing values"
+        />
+
         <v-btn color="primary" @click="filter" class="mt-5">
             Filter
         </v-btn>
