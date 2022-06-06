@@ -2,7 +2,7 @@
 import {
   defineComponent, computed
 } from '@vue/composition-api';
-import { cities, highlightedCity, center, infoOpen, highlightCity } from '../store';
+import { cities, highlightedCity, center, infoOpen, highlightCity, pointSelectionMode, pointSelection } from '../store';
 import { City, Marker } from '../types';
 
 export default defineComponent({
@@ -33,6 +33,12 @@ export default defineComponent({
       if (parseFloat(value)) return parseFloat(value)> 0 ? value : 'N/A'
       return value
     }
+    function selectPoint(event: any) {
+      if(pointSelectionMode) pointSelection.value = {
+        lat: event.latLng.lat(),
+        lng: event.latLng.lng(),
+      }
+    }
     return {
       center,
       cities,
@@ -40,8 +46,10 @@ export default defineComponent({
       markerLocations,
       highlightedCity,
       highlightInfo,
+      pointSelectionMode,
       highlightCity,
       getProperty,
+      selectPoint,
     }
   }
 });
@@ -51,7 +59,9 @@ export default defineComponent({
   <GmapMap
     :center='center'
     :zoom='5'
+    :style="pointSelectionMode ?{cursor: 'crosshair'} :{}"
     style='width:100%;  height: 100%;'
+    @click="selectPoint"
   >
     <GmapMarker
       v-for="marker in markerLocations"

@@ -17,6 +17,10 @@ export const center = ref({ lat: 37.09, lng: -95.713 });
 
 export const infoOpen = ref<Boolean>(false)
 
+export const pointSelection = ref()
+
+export const pointSelectionMode = ref<Boolean>(false)
+
 export function highlightCity(cityId: string){
     highlightedCity.value = cities.value.find(
       (city: City) => city.id === cityId
