@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ref } from '@vue/composition-api';
-import { State } from './types';
+import { State, City, Marker } from './types';
 
 
 export const axiosInstance = ref(axios.create({
@@ -9,12 +9,28 @@ export const axiosInstance = ref(axios.create({
 
 export const searchedStates = ref<State[]>([]);
 
-export const cities = ref([]);
+export const cities = ref<City[]>([]);
+
+export const highlightedCity = ref<City>()
+
+export const center = ref({ lat: 37.09, lng: -95.713 });
+
+export const infoOpen = ref<Boolean>(false)
+
+export function highlightCity(cityId: string){
+    highlightedCity.value = cities.value.find(
+      (city: City) => city.id === cityId
+    )
+    if (highlightedCity.value){
+        center.value = {lat: highlightedCity.value?.latitude, lng: highlightedCity.value?.longitude};
+        infoOpen.value = true
+    }
+  }
 
 export async function fetchCities(){
     let next_page: number | undefined = 1;
     while(next_page){
-        let response = await(axiosInstance.value.get(
+        const response = await(axiosInstance.value.get(
             `/cities?states=${searchedStates.value.join(',')}&page=${next_page}`
         ))
         if(response.data.next){

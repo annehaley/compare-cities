@@ -1,10 +1,12 @@
 <script lang="ts">
 import { defineComponent, ref } from '@vue/composition-api';
-import { searchedStates, fetchCities } from './store';
+import ResultsSidebar from './components/ResultsSidebar.vue';
+import { searchedStates, fetchCities, cities } from './store';
 import { State } from './types';
 
 
 export default defineComponent({
+  components: { ResultsSidebar },
   name: 'App',
   setup() {
     let stateOptions = ref<State[]>([])
@@ -28,6 +30,7 @@ export default defineComponent({
     }
 
     return {
+      cities,
       stateOptions,
       selectedStates,
       searchedStates,
@@ -85,6 +88,7 @@ export default defineComponent({
 
     <v-main>
       <router-view />
+      <results-sidebar v-if="cities.length"/>
     </v-main>
   </v-app>
 </template>
