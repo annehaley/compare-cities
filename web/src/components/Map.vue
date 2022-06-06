@@ -18,6 +18,13 @@ export default defineComponent({
       'per_capita_net_earnings',
       'incorporated',
       'military',
+      'median_age',
+      'male_female_ratio',
+      'percentage_white',
+      'percentage_black',
+      'percentage_hispanic_latino',
+      'percentage_asian',
+      'percentage_native_american',
     ]
     const markerLocations = computed(
       (): Marker[] =>cities.value.map(

@@ -33,6 +33,13 @@ class City(models.Model):
     total_employment = models.IntegerField(
         help_text="Total Full-Time and Part-Time Employment by NAICS Industry in number of jobs"
     )
+    median_age = models.FloatField()
+    male_female_ratio = models.FloatField()
+    percentage_white = models.FloatField()
+    percentage_black = models.FloatField()
+    percentage_hispanic_latino = models.FloatField()
+    percentage_asian = models.FloatField()
+    percentage_native_american = models.FloatField()
 
 
 admin.site.register(City)

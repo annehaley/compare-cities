@@ -1,14 +1,19 @@
 <script lang="ts">
 import {
-    defineComponent
+    defineComponent, computed
 } from '@vue/composition-api';
 import { cities, highlightCity } from '../store';
+import { City } from '../types';
 
 
 export default defineComponent({
     setup() {
+        const sortedCities = computed(
+            () => cities.value.sort((a: City, b: City) => a.name.localeCompare(b.name))
+        )
         return {
             cities,
+            sortedCities,
             highlightCity,
         }
     }
@@ -25,7 +30,7 @@ export default defineComponent({
             <v-card-title>Results ({{ cities.length }})</v-card-title>
             <v-container>
                 <v-row
-                    v-for="city in cities"
+                    v-for="city in sortedCities"
                     :key="city.id"
                     @click="() => highlightCity(city.id)"
                 >

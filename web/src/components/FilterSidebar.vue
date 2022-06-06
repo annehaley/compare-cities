@@ -15,6 +15,9 @@ export default defineComponent({
             'per_capita_personal_income': "Personal income",
             'per_capita_dividends_interest_and_rent': "Net costs",
             'per_capita_net_earnings': "Net earnings",
+            'median_age': "Median age",
+            'male_female_ratio': "Male to Female Ratio",
+            'percentage_white': "Percentage white population",
         }
         const maximumRanges = computed(() => {
             return Object.fromEntries(
@@ -36,7 +39,10 @@ export default defineComponent({
         const includeMilitary = ref<Boolean>(true)
         const includeUnincorporated = ref<Boolean>(true)
 
-
+        function sliderStep(max: number) {
+            var order = Math.floor(Math.log(max) / Math.LN10 + 0.000000001);
+            return Math.pow(10, order - 2);
+        }
         function filter() {
             cities.value = allCities.value
             if(pointSelection.value && milesFrom.value){
@@ -81,6 +87,7 @@ export default defineComponent({
             maximumRanges,
             includeMilitary,
             includeUnincorporated,
+            sliderStep,
             filter,
         }
     },
@@ -144,7 +151,7 @@ export default defineComponent({
                     thumb-label="always"
                     :min="range[0]"
                     :max="range[1]"
-                    step="10"
+                    :step="sliderStep(range[1])"
                 />
             </v-expansion-panel-content>
         </v-expansion-panel>

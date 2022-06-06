@@ -23,6 +23,13 @@ export interface City {
     timezone: string,
     total_employment: number,
     zips: string,
+    median_age: number,
+    male_female_ratio: number,
+    percentage_white: number,
+    percentage_black: number,
+    percentage_hispanic_latino: number,
+    percentage_asian: number,
+    percentage_native_american: number,
 }
 
 export interface Marker {
