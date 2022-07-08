@@ -58,7 +58,7 @@ export default defineComponent({
       :value="searchedStates.length == 0 || searching"
       :opacity="0.8"
     >
-      <v-card width="400px" class="pa-4">
+      <v-card width="600px" class="pa-4">
         <v-card-title>Select up to 5 states for your search</v-card-title>
         <v-select
           v-model="selectedStates"
